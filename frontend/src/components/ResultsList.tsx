@@ -5,7 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { useAppSelector } from "@/store/hooks/redux";
 import { ExternalLink, SearchX } from "lucide-react";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 
 interface TextChunk {
   text: string;
@@ -141,8 +141,8 @@ const NoResults = ({ query }: { query: string }) => (
     <SearchX className="h-12 w-12 text-muted-foreground mb-4" />
     <h2 className="text-xl font-semibold mb-2">No results found</h2>
     <p className="text-muted-foreground max-w-md">
-      We couldn't find any matches for "{query}". Try different or more general
-      keywords.
+      We couldn&apos;t find any matches for &quot;{query}&quot;. Try different
+      or more general keywords.
     </p>
   </div>
 );
@@ -154,15 +154,18 @@ export function ResultsList() {
   const { highlightPattern: highlightTerm, selectedMatch: currentHighlight } =
     useAppSelector((state) => state.highlight);
 
-  const getHighlightClass = (resultIndex: number, matchIndex: number) => {
-    return cn(
-      "search-highlight rounded px-1 py-0.5",
-      "bg-purple-500/15 dark:bg-purple-500/30 text-purple-700 dark:text-purple-300",
-      currentHighlight.resultIndex === resultIndex &&
-        currentHighlight.matchIndex === matchIndex &&
-        "bg-purple-500/30 dark:bg-purple-500/50 text-purple-800 dark:text-purple-200 ring-2 ring-purple-500/50"
-    );
-  };
+  const getHighlightClass = useCallback(
+    (resultIndex: number, matchIndex: number): string => {
+      return cn(
+        "search-highlight rounded px-1 py-0.5",
+        "bg-purple-500/15 dark:bg-purple-500/30 text-purple-700 dark:text-purple-300",
+        currentHighlight.resultIndex === resultIndex &&
+          currentHighlight.matchIndex === matchIndex &&
+          "bg-purple-500/30 dark:bg-purple-500/50 text-purple-800 dark:text-purple-200 ring-2 ring-purple-500/50"
+      );
+    },
+    [currentHighlight]
+  );
 
   const allChunks = useMemo(() => {
     const chunksMap = new Map<number, TextChunk[]>();
@@ -181,7 +184,7 @@ export function ResultsList() {
     });
 
     return chunksMap;
-  }, [results, highlightTerm, currentHighlight]);
+  }, [results, highlightTerm, getHighlightClass]);
 
   if (isLoading) return <LoadingSkeleton />;
   if (error) return <ErrorMessage message={error} />;

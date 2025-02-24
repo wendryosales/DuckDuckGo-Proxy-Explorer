@@ -1,7 +1,9 @@
 "use client";
 
+import { Skeleton } from "@/components/ui/skeleton";
 import { useAppSelector } from "@/store/hooks/redux";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import {
   Pagination,
   PaginationContent,
@@ -12,7 +14,7 @@ import {
   PaginationPrevious,
 } from "./ui/pagination";
 
-export function PaginationComponent() {
+function PaginationControls() {
   const { meta } = useAppSelector((state) => state.searchResults);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -37,12 +39,10 @@ export function PaginationComponent() {
 
     pages.push(1);
 
-    // Ellipsis at the beginning
     if (currentPage > 3) {
       pages.push("ellipsis");
     }
 
-    // Pages in the middle
     for (
       let i = Math.max(2, currentPage - 1);
       i <= Math.min(totalPages - 1, currentPage + 1);
@@ -51,7 +51,6 @@ export function PaginationComponent() {
       pages.push(i);
     }
 
-    // Ellipsis at the end
     if (currentPage < totalPages - 2) {
       pages.push("ellipsis");
     }
@@ -110,5 +109,21 @@ export function PaginationComponent() {
         )}
       </PaginationContent>
     </Pagination>
+  );
+}
+
+function PaginationSkeleton() {
+  return (
+    <div className="mt-6 flex justify-center">
+      <Skeleton className="h-10 w-96" />
+    </div>
+  );
+}
+
+export function PaginationComponent() {
+  return (
+    <Suspense fallback={<PaginationSkeleton />}>
+      <PaginationControls />
+    </Suspense>
   );
 }
