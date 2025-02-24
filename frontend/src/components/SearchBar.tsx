@@ -4,7 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { setSearchTerm } from "@/store/features/search/searchResults/searchResultsSlice";
-import { fetchSearchResults } from "@/store/features/search/searchResults/thunks";
+import {
+  fetchHistory,
+  fetchSearchResults,
+} from "@/store/features/search/searchResults/thunks";
 import { useAppDispatch } from "@/store/hooks/redux";
 import { Search } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -18,7 +21,7 @@ function SearchBarContent() {
   const [query, setQueryValue] = useState(searchParams.get("q") || "");
 
   const performSearch = useCallback(
-    (searchQuery: string, page = 1) => {
+    async (searchQuery: string, page = 1) => {
       if (!searchQuery.trim()) return;
 
       const params = new URLSearchParams();
@@ -27,7 +30,8 @@ function SearchBarContent() {
       router.push(`/search?${params.toString()}`);
 
       dispatch(setSearchTerm(searchQuery));
-      dispatch(fetchSearchResults({ query: searchQuery, page }));
+      await dispatch(fetchSearchResults({ query: searchQuery, page }));
+      dispatch(fetchHistory());
     },
     [dispatch, router]
   );
