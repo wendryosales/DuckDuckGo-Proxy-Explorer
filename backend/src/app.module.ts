@@ -1,7 +1,8 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { envSchema } from './env/env';
 import { EnvModule } from './env/env.module';
+import { AppLoggerMiddleware } from './middlewares/logging-request.middleware';
 import { SearchModule } from './search/search.module';
 
 @Module({
@@ -14,4 +15,8 @@ import { SearchModule } from './search/search.module';
     EnvModule,
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(AppLoggerMiddleware).forRoutes('*');
+  }
+}
