@@ -1,0 +1,37 @@
+@baseUrl = http://localhost:3002
+@userId = user123
+
+### Search with GET (with userId)
+GET {{baseUrl}}/search?q=nestjs&page=1&perPage=10
+x-user-id: {{userId}}
+
+### Search with GET (anonymous)
+GET {{baseUrl}}/search?q=test
+# Without header x-user-id will use 'anonymous'
+
+### Search with POST (with userId)
+POST {{baseUrl}}/search
+x-user-id: {{userId}}
+Content-Type: application/json
+
+{
+    "q": "duckduckgo",
+    "page": 1,
+    "perPage": 10
+}
+
+### Search with POST (anonymous)
+POST {{baseUrl}}/search
+Content-Type: application/json
+
+{
+    "q": "javascript"
+}
+
+### Get search history (with userId)
+GET {{baseUrl}}/search/history
+x-user-id: {{userId}}
+
+### Get search history (anonymous)
+GET {{baseUrl}}/search/history
+# Without header x-user-id will return history of 'anonymous'
