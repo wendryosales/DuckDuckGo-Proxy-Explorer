@@ -1,3 +1,4 @@
+import { getUserId } from "@/lib/user";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -13,6 +14,9 @@ export const fetchSearchResults = createAsyncThunk(
     try {
       const response = await axios.get(`/api/search`, {
         params: { q: query, page, perPage },
+        headers: {
+          "x-user-id": getUserId(),
+        },
       });
       return response.data;
     } catch (error) {
