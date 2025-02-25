@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const envSchema = z.object({
-  PORT: z.coerce.number().optional().default(3001),
+  PORT: z.coerce.number().optional().default(3002),
   DUCKDUCKGO_BASE_URL: z
     .string()
     .optional()
