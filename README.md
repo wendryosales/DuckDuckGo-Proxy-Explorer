@@ -8,6 +8,10 @@ This is a web interface that allows you to explore and test the DuckDuckGo API t
 - 🔗 [Backend API](https://duckduckgo-proxy-explorer.onrender.com)
 - 📚 [API Documentation (Swagger)](https://duckduckgo-proxy-explorer.onrender.com/api)
 
+## Note on Free Hosting
+
+Please note that both the frontend and backend services are hosted on free tiers (Vercel and Render, respectively). The backend API may take a few moments to start up when accessed after a period of inactivity, as the service is suspended during idle times to conserve resources. If you experience a timeout on your first search, please wait a moment and try again.
+
 ## Running Locally
 
 1. Clone the repository:
