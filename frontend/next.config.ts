@@ -3,12 +3,17 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   async rewrites() {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+    if (!apiUrl && process.env.NODE_ENV === "production") {
+      throw new Error(
+        "NEXT_PUBLIC_API_URL must be set in production environment"
+      );
+    }
+
     return [
       {
         source: "/api/:path*",
-        destination: `${
-          process.env.NEXT_PUBLIC_API_URL || "http://localhost:3002"
-        }/:path*`,
+        destination: `${apiUrl || "http://localhost:3002"}/:path*`,
       },
     ];
   },
